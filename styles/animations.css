@@ -1,0 +1,97 @@
+/* styles/animations.css */
+@keyframes subtle-bg-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+body {
+  animation: subtle-bg-shift 20s ease-in-out infinite;
+  background-size: 400% 400%;
+}
+
+@keyframes burst-expand {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(10);
+  }
+}
+
+.burst-glow.animate {
+  animation: burst-expand 1.5s ease-out forwards;
+}
+
+@keyframes particle-float {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(0.5);
+  }
+}
+
+/* Text glow pulse */
+@keyframes glow-pulse {
+  0%, 100% { text-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+  50% { text-shadow: 0 0 40px rgba(255, 215, 0, 0.8), 0 0 60px rgba(255, 215, 0, 0.4); }
+}
+
+.happy-new-year.pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes name-dissolve {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-20px); }
+}
+
+.dear-manisha.dissolve {
+  animation: name-dissolve 2s ease-out forwards;
+}
+
+/* Message entrance */
+@keyframes message-slide-in {
+  0% {
+    opacity: 0;
+    transform: translateY(50px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.message-container.animate {
+  animation: message-slide-in 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Fade out */
+@keyframes fade-slide-out {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+.message-wrapper.fade-out .message-container {
+  animation: fade-slide-out 0.8s ease-out forwards;
+}
+
+/* Final fade to black */
+@keyframes fade-to-black {
+  0% { opacity: 1; }
+  100% { opacity: 0; background: #000; }
+}
+
+.experience-container.end {
+  animation: fade-to-black 3s ease-out forwards;
+}

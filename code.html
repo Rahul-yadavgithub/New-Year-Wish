@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy New Year, Manisha ✨</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/animations.css">
+</head>
+<body>
+  <!-- Canvas for WebGL particles -->
+  <canvas id="particle-canvas"></canvas>
+  
+  <!-- Already viewed overlay -->
+  <div id="already-viewed" class="already-viewed hidden">
+    <div class="already-content glass">
+      <h2>This surprise has already been opened 💫</h2>
+      <p>It was meant to be a once-in-a-lifetime moment. Cherish it.</p>
+      <small>Visited on: <span id="visit-date"></span></small>
+    </div>
+  </div>
+
+  <!-- Main experience container -->
+  <div id="experience-container" class="experience-container">
+    <!-- Opening burst glow -->
+    <div class="burst-glow"></div>
+    
+    <!-- Text reveal container -->
+    <div class="text-reveal-container">
+      <h1 class="happy-new-year">
+        <span class="char">H</span><span class="char">A</span><span class="char">P</span><span class="char">P</span><span class="char">Y</span><span class="char"> </span>
+        <span class="char">N</span><span class="char">E</span><span class="char">W</span><span class="char"> </span>
+        <span class="char">Y</span><span class="char">E</span><span class="char">A</span><span class="char">R</span>
+      </h1>
+    </div>
+    
+    <!-- Name container -->
+    <div class="name-container">
+      <p class="dear-manisha">Dear Manisha ✨</p>
+    </div>
+    
+    <!-- Messages section -->
+    <section class="messages-section">
+      <div class="message-wrapper" data-message="1">
+        <div class="message-container">
+          <div class="message-card glass">
+            <p class="message-text" data-text="I know the distance between us is vast, but it will never diminish what we share."></p>
+          </div>
+        </div>
+      </div>
+      <div class="message-wrapper" data-message="2">
+        <div class="message-container">
+          <div class="message-card glass">
+            <p class="message-text" data-text="Every night, I look at the stars and know you're under the same sky."></p>
+          </div>
+        </div>
+      </div>
+      <div class="message-wrapper" data-message="3">
+        <div class="message-container">
+          <div class="message-card glass">
+            <p class="message-text" data-text="You've been my light in the darkest times, and I can't wait to hold you again."></p>
+          </div>
+        </div>
+      </div>
+      <div class="message-wrapper" data-message="4">
+        <div class="message-container">
+          <div class="message-card glass">
+            <p class="message-text" data-text="This new year, my resolution is to close the gap between us."></p>
+          </div>
+        </div>
+      </div>
+      <div class="message-wrapper" data-message="5">
+        <div class="message-container">
+          <div class="message-card glass">
+            <p class="message-text" data-text="Until then, remember: my heart beats for you, always."></p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Final message -->
+    <div class="final-message-container">
+      <div class="final-message glass">
+        <p>Thank you for being part of my journey.<br>Happy 2026. 💫</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js"></script>
+  
+  <script src="js/storage-handler.js"></script>
+  <script src="js/audio-engine.js"></script>
+  <script src="js/particle-system.js"></script>
+  <script src="js/text-animator.js"></script>
+  <script src="js/scroll-handler.js"></script>
+  <script src="js/experience-controller.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
