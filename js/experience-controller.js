@@ -1,4 +1,3 @@
-// js/experience-controller.js
 class ExperienceController {
   constructor(storage, audio, particles, textAnimator) {
     this.storage = storage;
@@ -6,61 +5,49 @@ class ExperienceController {
     this.particles = particles;
     this.textAnimator = textAnimator;
 
-    this.masterTimeline = gsap.timeline({ paused: true });
-    this.subtleMotionFn = null;
+    this.timeline = gsap.timeline({ paused: true });
+    this.subtleFn = null;
 
-    this.initTimeline();
+    this.buildTimeline();
   }
 
-  initTimeline() {
-    this.masterTimeline
-      // Firecracker glow
-      .to('.burst-glow', { className: '+=animate', duration: 0 }, 0.3)
-
-      // Firecracker burst (sync-critical)
+  buildTimeline() {
+    this.timeline
       .call(() => {
         this.audio.playBurst();
         this.particles.burst();
       }, null, 0.3)
 
-      // Happy New Year reveal
-      .to('.text-reveal-container', { opacity: 1, duration: 0.5 }, 0.8)
-      .call(() => this.textAnimator.animateHappyNewYear(), null, 1.5)
-
-      // Name reveal
-      .call(() => this.textAnimator.animateName(), null, 2.0)
-
-      // Messages section
-      .to('.messages-section', { opacity: 1, duration: 0 }, 5.0)
-
-      // Ending fade
-      .to('.experience-container', { className: '+=end', duration: 3 }, '+=5')
-
-      // Finalize experience
       .call(() => {
-        this.audio.playSoftChime();
-        this.audio.fadeOut();
-        this.stopSubtleMotion();
+        this.textAnimator.animateHappyNewYear();
+      }, null, 1.2)
+
+      .call(() => {
+        this.textAnimator.animateName();
+      }, null, 2.2)
+
+      .call(() => {
+        this.startSubtleMotion();
+      }, null, 3.0)
+
+      .call(() => {
         this.storage.markAsVisited();
-      }, null, '+=1');
+      }, null, "+=5");
   }
 
   startExperience() {
-    this.masterTimeline.play();
-    this.startSubtleMotion();
+    this.timeline.play();
   }
 
   startSubtleMotion() {
-    if (this.subtleMotionFn) return;
-
-    this.subtleMotionFn = () => this.particles.subtleMotion();
-    gsap.ticker.add(this.subtleMotionFn);
+    if (this.subtleFn) return;
+    this.subtleFn = () => this.particles.subtleMotion();
+    gsap.ticker.add(this.subtleFn);
   }
 
   stopSubtleMotion() {
-    if (!this.subtleMotionFn) return;
-
-    gsap.ticker.remove(this.subtleMotionFn);
-    this.subtleMotionFn = null;
+    if (!this.subtleFn) return;
+    gsap.ticker.remove(this.subtleFn);
+    this.subtleFn = null;
   }
 }
