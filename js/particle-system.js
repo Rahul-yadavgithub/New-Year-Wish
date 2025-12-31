@@ -1,97 +1,105 @@
-// js/particle-system.js
 class ParticleSystem {
   constructor() {
+    this.canvas = document.getElementById("particle-canvas");
+
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this.renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('particle-canvas'), alpha: true });
+    this.camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
+
+    this.renderer = new THREE.WebGLRenderer({
+      canvas: this.canvas,
+      alpha: true,
+      antialias: true
+    });
+
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this.renderer.setSize(window.innerWidth, window.innerHeight);
+
+    this.camera.position.z = 5;
+
     this.particles = [];
     this.initParticles();
-    this.camera.position.z = 5;
+
+    window.addEventListener("resize", () => this.resize());
+
     this.animate();
   }
 
   initParticles() {
+    const count = 1000;
     const geometry = new THREE.BufferGeometry();
-    const particleCount = 1000;
-    const positions = new Float32Array(particleCount * 3);
-    const colors = new Float32Array(particleCount * 3);
-    const sizes = new Float32Array(particleCount);
+    const positions = new Float32Array(count * 3);
+    const colors = new Float32Array(count * 3);
 
-    for (let i = 0; i < particleCount; i++) {
+    for (let i = 0; i < count; i++) {
       positions[i * 3] = 0;
       positions[i * 3 + 1] = 0;
       positions[i * 3 + 2] = 0;
 
-      // Random colors: gold, pink, purple
-      colors[i * 3] = Math.random() > 0.5 ? 1 : Math.random() * 0.5 + 0.5; // R
-      colors[i * 3 + 1] = Math.random() * 0.5 + 0.5; // G
-      colors[i * 3 + 2] = Math.random() > 0.5 ? 1 : 0.5; // B
+      colors[i * 3] = 1;
+      colors[i * 3 + 1] = Math.random() * 0.5 + 0.5;
+      colors[i * 3 + 2] = Math.random() > 0.5 ? 1 : 0.6;
 
-      sizes[i] = Math.random() * 3 + 1;
       this.particles.push({
-        vx: (Math.random() - 0.5) * 0.1,
-        vy: (Math.random() - 0.5) * 0.1,
-        vz: (Math.random() - 0.5) * 0.1,
+        vx: 0,
+        vy: 0,
+        vz: 0,
         life: 0,
-        maxLife: Math.random() * 100 + 50
+        maxLife: Math.random() * 80 + 60
       });
     }
 
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-    geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
 
-    const material = new THREE.PointsMaterial({
-      size: 0.05,
+    this.material = new THREE.PointsMaterial({
+      size: 0.06,
       vertexColors: true,
       transparent: true,
       opacity: 0,
-      blending: THREE.AdditiveBlending
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
     });
 
-    this.particleMesh = new THREE.Points(geometry, material);
-    this.scene.add(this.particleMesh);
+    this.mesh = new THREE.Points(geometry, this.material);
+    this.scene.add(this.mesh);
   }
 
   burst() {
-    this.particleMesh.material.opacity = 1;
-    this.particles.forEach((p, i) => {
-      const pos = this.particleMesh.geometry.attributes.position.array;
-      const dir = Math.random() * Math.PI * 2;
-      const speed = Math.random() * 0.05 + 0.02;
-      p.vx = Math.cos(dir) * speed;
-      p.vy = Math.sin(dir) * speed;
-      p.vz = (Math.random() - 0.5) * 0.02;
+    this.material.opacity = 1;
+    this.particles.forEach(p => {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = Math.random() * 0.08 + 0.02;
+      p.vx = Math.cos(angle) * speed;
+      p.vy = Math.sin(angle) * speed;
+      p.vz = (Math.random() - 0.5) * 0.04;
       p.life = 0;
     });
   }
 
   animate() {
     requestAnimationFrame(() => this.animate());
+
+    let alive = 0;
+    const pos = this.mesh.geometry.attributes.position.array;
+
     this.particles.forEach((p, i) => {
       if (p.life < p.maxLife) {
-        const pos = this.particleMesh.geometry.attributes.position.array;
         pos[i * 3] += p.vx;
         pos[i * 3 + 1] += p.vy;
         pos[i * 3 + 2] += p.vz;
         p.life++;
-        this.particleMesh.material.opacity = 1 - (p.life / p.maxLife);
+        alive++;
       }
     });
-    this.particleMesh.geometry.attributes.position.needsUpdate = true;
-    this.renderer.render(this.scene, this.camera);
-  }
 
-  subtleMotion() {
-    // Gentle floating for background
-    this.particles.forEach((p, i) => {
-      p.vy += 0.0001; // Slow upward drift
-      const pos = this.particleMesh.geometry.attributes.position.array;
-      pos[i * 3 + 1] += p.vy;
-      if (pos[i * 3 + 1] > 5) pos[i * 3 + 1] = -5;
-    });
-    this.particleMesh.geometry.attributes.position.needsUpdate = true;
+    this.material.opacity = alive / this.particles.length;
+    this.mesh.geometry.attributes.position.needsUpdate = true;
+    this.renderer.render(this.scene, this.camera);
   }
 
   resize() {
